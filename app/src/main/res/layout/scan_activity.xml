@@ -45,9 +45,10 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="48dp"
-            android:onClick="@{()->event.onAction(state)}"
+
             android:textColor="#FF9900"
             android:textSize="16sp" />
+        <!--android:onClick="@{()->event.onAction(state)}"-->
     </RelativeLayout>
 </layout>
 

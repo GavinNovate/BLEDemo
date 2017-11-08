@@ -1,13 +1,16 @@
 <resources>
     <string name="app_name">Cubers</string>
     <string name="title">CUBERS</string>
-    <string-array name="notice">
-        <item>手机不支持蓝牙</item>
-        <item>手机不支持BLE蓝牙</item>
-        <item>蓝牙未打开</item>
-        <item>无扫描权限</item>
-        <item>正在扫描</item>
-        <item>扫描成功</item>
-        <item>未扫描到设备</item>
-    </string-array>
+
+    <string name="notice_un_support">手机不支持蓝牙</string>
+    <string name="notice_un_support_ble">手机不支持BLE蓝牙</string>
+    <string name="notice_bluetooth_off">蓝牙未打开</string>
+    <string name="notice_no_permission">无扫描权限</string>
+    <string name="notice_scanning">正在扫描</string>
+    <string name="notice_scanning_failed">未扫描到设备</string>
+    <string name="notice_scanning_success">扫描成功</string>
+
+    <string name="action_bluetooth_off">打开蓝牙</string>
+    <string name="action_no_permission">开始扫描</string>
+    <string name="action_scanning_failed">重新扫描</string>
 </resources>

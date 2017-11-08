@@ -2,7 +2,9 @@ package net.novate.cubers.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableInt;
 import android.os.Bundle;
+import android.util.Log;
 
 import net.novate.cubers.R;
 import net.novate.cubers.base.BaseActivity;
@@ -17,6 +19,8 @@ import net.novate.cubers.viewmodel.ScanViewModel;
  */
 public class ScanActivity extends BaseActivity {
 
+    private static final String TAG = "ScanActivity";
+
     private ScanActivityBinding binding;
     private ScanViewModel viewModel;
 
@@ -25,15 +29,19 @@ public class ScanActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.scan_activity);
         viewModel = ViewModelProviders.of(this).get(ScanViewModel.class);
+
+        init();
     }
 
     private void init() {
         binding.setState(viewModel.getState());
         binding.setEvent(new ScanActivityEvent() {
             @Override
-            public void onAction(int state) {
-
+            public void onAction(ObservableInt state) {
+                Log.d(TAG, "onAction() called with: state = [" + state.get() + "]");
             }
         });
+
+        viewModel.init();
     }
 }

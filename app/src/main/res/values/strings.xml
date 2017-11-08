@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Cubers</string>
+    <string name="title">CUBERS</string>
+    <string-array name="notice">
+        <item>手机不支持蓝牙</item>
+        <item>手机不支持BLE蓝牙</item>
+        <item>蓝牙未打开</item>
+        <item>无扫描权限</item>
+        <item>正在扫描</item>
+        <item>扫描成功</item>
+        <item>未扫描到设备</item>
+    </string-array>
+</resources>

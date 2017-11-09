@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import net.novate.cubers.entity.DeviceEntity;
+import net.novate.cubers.model.Device;
 
 import java.util.List;
 
@@ -24,26 +24,26 @@ import io.reactivex.Flowable;
 public interface DeviceDao {
 
     @Insert
-    void install(DeviceEntity... deviceEntities);
+    void install(Device... devices);
 
     @Delete
-    void delete(DeviceEntity... deviceEntities);
+    void delete(Device... devices);
 
     @Update
-    void update(DeviceEntity deviceEntity);
+    void update(Device device);
 
-    @Query("SELECT * FROM deviceentity")
-    List<DeviceEntity> selectAll();
+    @Query("SELECT * FROM Device")
+    List<Device> selectAll();
 
-    @Query("SELECT * FROM deviceentity WHERE id = :id")
-    DeviceEntity selectByID(int id);
+    @Query("SELECT * FROM Device WHERE id = :id")
+    Device selectByID(int id);
 
-    @Query("SELECT * FROM deviceentity WHERE name LIKE :name")
-    DeviceEntity selectByName(String name);
+    @Query("SELECT * FROM Device WHERE name LIKE :name")
+    Device selectByName(String name);
 
-    @Query("SELECT * FROM deviceentity WHERE address LIKE :address")
-    DeviceEntity selectByAddress(String address);
+    @Query("SELECT * FROM Device WHERE address LIKE :address")
+    Device selectByAddress(String address);
 
-    @Query("SELECT * FROM deviceentity")
-    Flowable<List<DeviceEntity>> observeAll();
+    @Query("SELECT * FROM Device")
+    Flowable<List<Device>> observeAll();
 }

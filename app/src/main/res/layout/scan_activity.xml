@@ -5,7 +5,7 @@
 
         <variable
             name="state"
-            type="android.databinding.ObservableInt" />
+            type="Integer" />
 
         <variable
             name="event"
@@ -38,17 +38,18 @@
             android:textSize="16sp" />
 
         <TextView
+            android:background="?attr/selectableItemBackground"
             actionShow="@{state}"
             actionText="@{state}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:onClick="@{()->event.onAction(state)}"
             android:layout_marginBottom="48dp"
-
             android:textColor="#FF9900"
+            android:padding="8dp"
             android:textSize="16sp" />
-        <!--android:onClick="@{()->event.onAction(state)}"-->
     </RelativeLayout>
 </layout>
 

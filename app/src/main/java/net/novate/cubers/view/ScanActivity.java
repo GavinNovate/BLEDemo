@@ -1,9 +1,10 @@
 package net.novate.cubers.view;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableInt;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import net.novate.cubers.R;
@@ -34,14 +35,21 @@ public class ScanActivity extends BaseActivity {
     }
 
     private void init() {
-        binding.setState(viewModel.getState());
         binding.setEvent(new ScanActivityEvent() {
             @Override
-            public void onAction(ObservableInt state) {
-                Log.d(TAG, "onAction() called with: state = [" + state.get() + "]");
+            public void onAction(int state) {
+                Log.d(TAG, "onAction() called with: state = [" + state + "]");
             }
         });
 
+        viewModel.getState().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                if (integer != null) {
+                    binding.setState(integer);
+                }
+            }
+        });
         viewModel.init();
     }
 }

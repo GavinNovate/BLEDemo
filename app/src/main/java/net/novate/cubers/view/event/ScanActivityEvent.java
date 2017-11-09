@@ -1,7 +1,5 @@
 package net.novate.cubers.view.event;
 
-import android.databinding.ObservableInt;
-
 /**
  * author: gavin
  * create on: 2017/11/8.
@@ -9,5 +7,5 @@ import android.databinding.ObservableInt;
  */
 
 public interface ScanActivityEvent {
-    void onAction(ObservableInt state);
+    void onAction(int state);
 }

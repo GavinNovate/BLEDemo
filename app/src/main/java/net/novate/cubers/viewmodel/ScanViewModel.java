@@ -2,8 +2,9 @@ package net.novate.cubers.viewmodel;
 
 import android.Manifest;
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothAdapter;
-import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 
 import com.anthonycr.grant.PermissionsManager;
@@ -28,31 +29,53 @@ public class ScanViewModel extends BaseViewModel {
     public static final int STATE_SCANNING_SUCCESS = 6;
 
 
-    private ObservableInt state;
+    // 状态
+    private MutableLiveData<Integer> stateLiveData;
 
     private Bluetooth bluetooth;
 
     public ScanViewModel(@NonNull Application application) {
         super(application);
-        state = new ObservableInt();
+        stateLiveData = new MutableLiveData<>();
         bluetooth = Bluetooth.get();
     }
 
     public void init() {
+        updateState();
+    }
+
+
+    // ---- 获取数据 ----
+
+    /**
+     * 获取状态
+     *
+     * @return 状态
+     */
+    public LiveData<Integer> getState() {
+        return stateLiveData;
+    }
+
+    // ---- 操作指令 ----
+
+
+    // ---- 私有方法 ----
+    private void updateState() {
         if (bluetooth == null) {
-            state.set(STATE_UN_SUPPORT);
+            stateLiveData.postValue(STATE_UN_SUPPORT);
         } else if (!bluetooth.isSupportBle(getApp())) {
-            state.set(STATE_UN_SUPPORT_BLE);
+            stateLiveData.postValue(STATE_UN_SUPPORT_BLE);
         } else if (!(bluetooth.getState() == BluetoothAdapter.STATE_ON)) {
-            state.set(STATE_BLUETOOTH_OFF);
+            stateLiveData.postValue(STATE_BLUETOOTH_OFF);
         } else if (!PermissionsManager.hasPermission(getApp(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            state.set(STATE_NO_PERMISSION);
+            stateLiveData.postValue(STATE_NO_PERMISSION);
         } else {
-            state.set(STATE_SCANNING);
+            stateLiveData.postValue(STATE_SCANNING);
         }
     }
 
-    public ObservableInt getState() {
-        return state;
+    @Override
+    protected void onCleared() {
+
     }
 }

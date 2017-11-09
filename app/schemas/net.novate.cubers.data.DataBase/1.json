@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4285357ff4e5e0cb57347788185f426d",
+    "identityHash": "b7bdedb4dc063184a124eeda1b2f652d",
     "entities": [
       {
-        "tableName": "DeviceEntity",
+        "tableName": "Device",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `address` TEXT, `lastTime` INTEGER NOT NULL)",
         "fields": [
           {
@@ -41,12 +41,12 @@
         },
         "indices": [
           {
-            "name": "index_DeviceEntity_address",
+            "name": "index_Device_address",
             "unique": true,
             "columnNames": [
               "address"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_DeviceEntity_address` ON `${TABLE_NAME}` (`address`)"
+            "createSql": "CREATE UNIQUE INDEX `index_Device_address` ON `${TABLE_NAME}` (`address`)"
           }
         ],
         "foreignKeys": []
@@ -54,7 +54,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4285357ff4e5e0cb57347788185f426d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b7bdedb4dc063184a124eeda1b2f652d\")"
     ]
   }
 }

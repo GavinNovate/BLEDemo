@@ -3,16 +3,38 @@
 
     <data>
 
+        <variable
+            name="device"
+            type="net.novate.cubers.model.Device" />
+
+        <variable
+            name="event"
+            type="net.novate.cubers.view.event.DeviceItemEvent" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@android:color/black" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设备名" />
+            android:onClick="@{()->event.onSelected(device)}"
+            android:paddingBottom="8dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:text="@{device.name}" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@android:color/black" />
+
     </LinearLayout>
 </layout>

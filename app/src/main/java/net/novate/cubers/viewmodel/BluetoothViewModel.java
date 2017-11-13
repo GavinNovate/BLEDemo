@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import net.novate.cubers.base.BaseViewModel;
 import net.novate.cubers.ble.Bluetooth;
+import net.novate.cubers.model.Device;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -142,6 +143,17 @@ public class BluetoothViewModel extends BaseViewModel {
      */
     public List<BluetoothDevice> getScannedDevices() {
         return bluetooth.getScannedDevices();
+    }
+
+    public List<Device> getScannedDeviceList() {
+        List<Device> devices = new ArrayList<>();
+        for (BluetoothDevice bluetoothDevice : getScannedDevices()) {
+            Device device = new Device();
+            device.setName(bluetoothDevice.getName());
+            device.setAddress(bluetoothDevice.getAddress());
+            devices.add(device);
+        }
+        return devices;
     }
 
     public void action(int state, int scanState) {

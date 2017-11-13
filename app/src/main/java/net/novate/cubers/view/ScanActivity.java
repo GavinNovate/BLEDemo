@@ -3,6 +3,7 @@ package net.novate.cubers.view;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import com.anthonycr.grant.PermissionsResultAction;
 
 import net.novate.cubers.R;
 import net.novate.cubers.base.BaseActivity;
+import net.novate.cubers.ble.Bluetooth;
 import net.novate.cubers.databinding.ScanActivityBinding;
 import net.novate.cubers.view.event.ScanActivityEvent;
 import net.novate.cubers.viewmodel.BluetoothViewModel;
@@ -68,7 +70,11 @@ public class ScanActivity extends BaseActivity {
             public void onChanged(@Nullable Integer integer) {
                 if (integer != null) {
                     binding.setScanState(integer);
+                    if (integer == Bluetooth.SCAN_STATE_SUCCESS) {
+                        startActivity(new Intent(ScanActivity.this, SelectActivity.class));
+                    }
                 }
+
             }
         });
 

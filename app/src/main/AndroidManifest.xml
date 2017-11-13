@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".view.MainActivity" />
         <activity android:name=".view.ShutterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,9 @@
         <activity android:name=".view.ScanActivity" />
         <activity android:name=".view.SelectActivity" />
         <activity android:name=".view.ConnectActivity" />
-        <activity android:name=".view.SupportActivity"></activity>
+        <activity android:name=".view.SupportActivity" />
+        <activity android:name=".view.CheckActivity" />
+        <activity android:name=".view.BluetoothActivity"></activity>
     </application>
 
 </manifest>

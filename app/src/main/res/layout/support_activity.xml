@@ -4,16 +4,8 @@
     <data>
 
         <variable
-            name="state"
-            type="Integer" />
-
-        <variable
-            name="scanState"
-            type="Integer" />
-
-        <variable
-            name="event"
-            type="net.novate.cubers.view.event.ScanActivityEvent" />
+            name="notice"
+            type="String" />
     </data>
 
     <RelativeLayout
@@ -32,31 +24,16 @@
 
         <TextView
             android:id="@+id/noticeView"
-            noticeTextScanState="@{scanState}"
-            noticeTextState="@{state}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/titleView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="48dp"
+            android:text="@{notice}"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
-        <TextView
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            actionShowScanState="@{scanState}"
-            actionShowState="@{state}"
-            actionTextScanState="@{scanState}"
-            actionTextState="@{state}"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:onClick="@{()->event.onAction(state,scanState)}"
-            android:layout_marginBottom="48dp"
-            android:textColor="#FF9900"
-            android:padding="8dp"
-            android:textSize="16sp" />
     </RelativeLayout>
 </layout>
+
 

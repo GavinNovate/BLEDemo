@@ -31,7 +31,8 @@
 
         <activity android:name=".view.ScanActivity" />
         <activity android:name=".view.SelectActivity" />
-        <activity android:name=".view.ConnectActivity"></activity>
+        <activity android:name=".view.ConnectActivity" />
+        <activity android:name=".view.SupportActivity"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@
 
     <string name="notice_un_support">手机不支持蓝牙</string>
     <string name="notice_un_support_ble">手机不支持BLE蓝牙</string>
+
     <string name="notice_bluetooth_off">蓝牙未打开</string>
     <string name="notice_no_permission">无扫描权限</string>
     <string name="notice_scanning">正在扫描</string>

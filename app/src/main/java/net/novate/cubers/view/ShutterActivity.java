@@ -1,12 +1,7 @@
 package net.novate.cubers.view;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.anthonycr.grant.PermissionsManager;
 
 import net.novate.cubers.R;
 import net.novate.cubers.base.BaseActivity;
@@ -23,12 +18,6 @@ import io.reactivex.disposables.Disposable;
  * author: gavin
  * create on: 2017/10/28.
  * description:闪屏页
- * <p>
- * 1.不支持BLE蓝牙 -> 扫描页 - 不支持
- * 3.蓝牙未打开 -> 扫描页 -> 未打开
- * 4.无扫描权限 -> 扫描页 - 无权限
- * 4.未连接过 -> 扫描页
- * 5.连接过 ->  连接页 - 尝试连接上一次的地址
  */
 
 public class ShutterActivity extends BaseActivity implements Observer<Long> {
@@ -49,14 +38,6 @@ public class ShutterActivity extends BaseActivity implements Observer<Long> {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-    }
-
-    @Override
     public void onSubscribe(Disposable d) {
         disposable = d;
     }
@@ -64,26 +45,28 @@ public class ShutterActivity extends BaseActivity implements Observer<Long> {
     @Override
     public void onNext(Long aLong) {
         Bluetooth bluetooth = Bluetooth.get();
+
         if (bluetooth == null) {
-            // TODO: 2017/11/1  设备不支持蓝牙
-            Log.d(TAG, "onNext: 设备不支持蓝牙");
+            // 设备不支持蓝牙 - 转到 SupportActivity
+
+            Intent intent = new Intent(this, SupportActivity.class);
+            intent.putExtra(SupportActivity.CODE, SupportActivity.UN_SUPPORT);
+            startActivity(intent);
         } else if (!bluetooth.isSupportBle(this)) {
-            // TODO: 2017/11/1 设备不支持BLE蓝牙
-            Log.d(TAG, "onNext: 设备不支持BLE蓝牙");
-        } else if (!(bluetooth.getState() == BluetoothAdapter.STATE_ON)) {
-            // TODO: 2017/11/1 蓝牙未打开
-            Log.d(TAG, "onNext: 蓝牙未打开");
+            // 设备不支持BLE蓝牙 - 转到 SupportActivity
 
-        } else if (!PermissionsManager.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            // TODO: 2017/11/1 无扫描权限
-            Log.d(TAG, "onNext: 无扫描权限");
+            Intent intent = new Intent(this, SupportActivity.class);
+            intent.putExtra(SupportActivity.CODE, SupportActivity.UN_SUPPORT_BLE);
+            startActivity(intent);
+        } else if (false) {
+            // 已连接过 - 转到 ConnectActivity
+            // TODO: 17-11-3
 
-//        }else if (){
-            // TODO: 2017/11/1 未连接过
-//        }else if (){
-            // TODO: 2017/11/1 连接过，直接连接
+        } else {
+            // 未连接过 - 转到 ScanActivity
+
+            startActivity(new Intent(this, ScanActivity.class));
         }
-        startActivity(new Intent(this, ScanActivity.class));
         finish();
     }
 
@@ -95,5 +78,13 @@ public class ShutterActivity extends BaseActivity implements Observer<Long> {
     @Override
     public void onComplete() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 }

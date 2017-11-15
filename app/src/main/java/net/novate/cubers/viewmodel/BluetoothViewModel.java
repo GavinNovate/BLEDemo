@@ -36,6 +36,8 @@ public class BluetoothViewModel extends BaseViewModel {
     private MutableLiveData<Integer> scanStateLiveData;
     // 连接状态
     private MutableLiveData<Integer> connectStateLiveData;
+    // 扫描到的设备数据
+    private MutableLiveData<List<Device>> scanedDevicesLiveData;
 
     // 绑定句柄
     private List<Disposable> disposableList = new ArrayList<>();
@@ -51,12 +53,15 @@ public class BluetoothViewModel extends BaseViewModel {
 
     public void init() {
 
-        // 查询状态
+        // 查询蓝牙状态
         stateLiveData.postValue(bluetooth.getState());
+        // 查询蓝牙扫描状态
         scanStateLiveData.postValue(bluetooth.getScanState());
+        // 查询已扫描到的设备
+        scanedDevicesLiveData.postValue(bluetoothDevicesToDevices(bluetooth.getScannedBluetoothDevices()));
         // TODO: 17-11-3 连接状态
 
-        // 监听状态
+        // 监听蓝牙状态
         bluetooth.observeState().subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -79,6 +84,7 @@ public class BluetoothViewModel extends BaseViewModel {
             }
         });
 
+        // 监听蓝牙扫描状态
         bluetooth.observeScanState().subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -88,6 +94,29 @@ public class BluetoothViewModel extends BaseViewModel {
             @Override
             public void onNext(Integer integer) {
                 scanStateLiveData.postValue(integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        // 监听已扫描到的设备
+        bluetooth.observeScanedBluetoothDevices().subscribe(new Observer<List<BluetoothDevice>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposableList.add(d);
+            }
+
+            @Override
+            public void onNext(List<BluetoothDevice> bluetoothDevices) {
+                scanedDevicesLiveData.postValue(bluetoothDevicesToDevices(bluetoothDevices));
             }
 
             @Override
@@ -136,26 +165,16 @@ public class BluetoothViewModel extends BaseViewModel {
         return connectStateLiveData;
     }
 
+    public LiveData<List<Device>> getScannedDevices() {
+        return scanedDevicesLiveData;
+    }
+
+
     /**
-     * 获取扫描到的设备
-     *
-     * @return 扫描到的设备
+     * 操作指令
+     * @param state 蓝牙状态
+     * @param scanState 蓝牙扫描状态
      */
-    public List<BluetoothDevice> getScannedDevices() {
-        return bluetooth.getScannedDevices();
-    }
-
-    public List<Device> getScannedDeviceList() {
-        List<Device> devices = new ArrayList<>();
-        for (BluetoothDevice bluetoothDevice : getScannedDevices()) {
-            Device device = new Device();
-            device.setName(bluetoothDevice.getName());
-            device.setAddress(bluetoothDevice.getAddress());
-            devices.add(device);
-        }
-        return devices;
-    }
-
     public void action(int state, int scanState) {
         switch (state) {
             case BluetoothAdapter.STATE_OFF:
@@ -170,6 +189,23 @@ public class BluetoothViewModel extends BaseViewModel {
                 }
                 break;
         }
+    }
+
+    /**
+     * 将 BluetoothDevices 转化为 Devices
+     *
+     * @param bluetoothDevices BluetoothDevices
+     * @return Devices
+     */
+    private List<Device> bluetoothDevicesToDevices(List<BluetoothDevice> bluetoothDevices) {
+        List<Device> devices = new ArrayList<>();
+        for (BluetoothDevice bluetoothDevice : bluetoothDevices) {
+            Device device = new Device();
+            device.setName(bluetoothDevice.getName());
+            device.setAddress(bluetoothDevice.getAddress());
+            devices.add(device);
+        }
+        return devices;
     }
 
 

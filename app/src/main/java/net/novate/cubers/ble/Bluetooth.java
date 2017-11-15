@@ -48,6 +48,8 @@ public class Bluetooth {
     public static final int SCAN_STATE_SUCCESS = 1;
     // 正在扫描
     public static final int SCAN_STATE_SCANNING = 2;
+    // 已扫描到一个设备
+    public static final int SCAN_STATE_FOUND = 3;
 
 
     private BluetoothAdapter bluetoothAdapter;
@@ -63,11 +65,15 @@ public class Bluetooth {
     private Observable<Long> scannerTimer;
     // 已扫描到的设备
     private List<BluetoothDevice> scannedDevices = new ArrayList<>();
+    // 扫描设备监听器
+    private Subject<List<BluetoothDevice>> scannedDevicesSubject;
 
     private Bluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         blueStateSubject = PublishSubject.create();
         scanStateSubject = PublishSubject.create();
+
+        scannedDevicesSubject = PublishSubject.create();
     }
 
     /**
@@ -151,16 +157,16 @@ public class Bluetooth {
     public Observable<Integer> observeScanState() {
         return scanStateSubject;
     }
+
     /**
      * 开启扫描
      */
     public Observable<List<BluetoothDevice>> scan() {
-        Subject<List<BluetoothDevice>> scanSubject = PublishSubject.create();
         if (scannerTimer == null) {
             // 开始扫描
             scanState = SCAN_STATE_SCANNING;
             scanStateSubject.onNext(scanState);
-            IScanCallback iScanCallback = new IScanCallback(scanSubject);
+            IScanCallback iScanCallback = new IScanCallback();
             bluetoothAdapter.getBluetoothLeScanner().startScan(iScanCallback);
 
             // 定时关闭扫描
@@ -169,26 +175,30 @@ public class Bluetooth {
                 @Override
                 public void accept(Long aLong) throws Exception {
                     bluetoothAdapter.getBluetoothLeScanner().stopScan(iScanCallback);
-                    if (iScanCallback.getDevices().size() > 0) {
+                    if (scannedDevices.size() > 0) {
                         scanState = SCAN_STATE_SUCCESS;
                     } else {
                         scanState = SCAN_STATE_FAILED;
                     }
                     scanStateSubject.onNext(scanState);
-                    scannedDevices.clear();
-                    scannedDevices.addAll(iScanCallback.getDevices());
-                    scanSubject.onComplete();
                     scannerTimer = null;
                 }
             });
-        } else {
-            scanSubject.onComplete();
         }
-        return scanSubject;
+        return scannedDevicesSubject;
     }
 
-    public List<BluetoothDevice> getScannedDevices() {
+    /**
+     * 获取已扫描到的蓝牙设备
+     *
+     * @return 蓝牙设备
+     */
+    public List<BluetoothDevice> getScannedBluetoothDevices() {
         return scannedDevices;
+    }
+
+    public Observable<List<BluetoothDevice>> observeScanedBluetoothDevices() {
+        return scannedDevicesSubject;
     }
 
     /**
@@ -217,14 +227,9 @@ public class Bluetooth {
     /**
      * 扫描回调接口
      */
-    static class IScanCallback extends ScanCallback {
+    class IScanCallback extends ScanCallback {
 
-        private Subject<List<BluetoothDevice>> scanSubject;
         private Map<String, BluetoothDevice> deviceMap = new HashMap<>();
-
-        IScanCallback(Subject<List<BluetoothDevice>> scanSubject) {
-            this.scanSubject = scanSubject;
-        }
 
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -233,7 +238,12 @@ public class Bluetooth {
                 deviceMap.put(result.getDevice().getAddress(), result.getDevice());
                 int newSize = deviceMap.size();
                 if (newSize > oldSize) {
-                    scanSubject.onNext(getDevices());
+                    scannedDevices.clear();
+                    scannedDevices.addAll(getDevices());
+                    scannedDevicesSubject.onNext(scannedDevices);
+                    if (newSize == 1) {
+                        scanStateSubject.onNext(SCAN_STATE_FOUND);
+                    }
                 }
             }
         }

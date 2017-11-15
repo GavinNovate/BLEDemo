@@ -22,6 +22,9 @@ public class Device implements Comparable<Device> {
     private String name;
 
     @ColumnInfo
+    private String alias;
+
+    @ColumnInfo
     private String address;
 
     @ColumnInfo
@@ -45,6 +48,14 @@ public class Device implements Comparable<Device> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getAddress() {

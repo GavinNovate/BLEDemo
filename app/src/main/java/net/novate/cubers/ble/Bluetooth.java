@@ -72,7 +72,6 @@ public class Bluetooth {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         blueStateSubject = PublishSubject.create();
         scanStateSubject = PublishSubject.create();
-
         scannedDevicesSubject = PublishSubject.create();
     }
 
@@ -209,8 +208,7 @@ public class Bluetooth {
      * @param device      device
      */
     public void connect(Context context, boolean autoConnect, BluetoothDevice device) {
-        device.connectGatt(context, autoConnect, new BluetoothGattCallback() {
-        });
+        device.connectGatt(context, autoConnect, new BluetoothConnector());
     }
 
     /**

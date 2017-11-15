@@ -70,8 +70,9 @@ public class ScanActivity extends BaseActivity {
             public void onChanged(@Nullable Integer integer) {
                 if (integer != null) {
                     binding.setScanState(integer);
-                    if (integer == Bluetooth.SCAN_STATE_FOUND) {
+                    if (integer == Bluetooth.SCAN_STATE_FOUND || integer == Bluetooth.SCAN_STATE_SUCCESS) {
                         startActivity(new Intent(ScanActivity.this, SelectActivity.class));
+                        finish();
                     }
                 }
 

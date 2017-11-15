@@ -9,21 +9,11 @@ import android.view.ViewGroup;
 
 import net.novate.cubers.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ConnectingFragment extends Fragment {
 
 
-    public ConnectingFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.connecting_fragment, container, false);
     }
 

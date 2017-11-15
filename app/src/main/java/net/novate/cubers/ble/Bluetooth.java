@@ -3,13 +3,13 @@ package net.novate.cubers.ble;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -205,10 +205,12 @@ public class Bluetooth {
      *
      * @param context     context
      * @param autoConnect autoConnect
-     * @param device      device
+     * @param address     address
      */
-    public void connect(Context context, boolean autoConnect, BluetoothDevice device) {
-        device.connectGatt(context, autoConnect, new BluetoothConnector());
+    public BluetoothConnector connect(Context context, boolean autoConnect, String address) {
+        BluetoothConnector connector = new BluetoothConnector();
+        bluetoothAdapter.getRemoteDevice(address).connectGatt(context, autoConnect, connector);
+        return connector;
     }
 
     /**
@@ -242,6 +244,7 @@ public class Bluetooth {
                     if (newSize == 1) {
                         scanStateSubject.onNext(SCAN_STATE_FOUND);
                     }
+                    Log.d(TAG, "onScanResult: " + scannedDevices.get(0).getName());
                 }
             }
         }
@@ -250,6 +253,7 @@ public class Bluetooth {
             return new ArrayList<>(deviceMap.values());
         }
     }
+
     /**
      * 单例持有类
      */

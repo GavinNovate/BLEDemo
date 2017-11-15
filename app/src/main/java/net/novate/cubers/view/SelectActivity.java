@@ -42,7 +42,7 @@ public class SelectActivity extends AppCompatActivity {
             @Override
             public void onSelected(Device device) {
                 // TODO: 2017/11/13 进入连接界面
-                startActivity(new Intent(SelectActivity.this, ConnectActivity.class));
+                startActivity(new Intent(SelectActivity.this, ConnectActivity.class).putExtra(ConnectActivity.ADDRESS, device.getAddress()));
             }
         });
 
@@ -55,5 +55,7 @@ public class SelectActivity extends AppCompatActivity {
                 deviceListAdapter.setDevices(devices);
             }
         });
+
+        viewModel.init();
     }
 }

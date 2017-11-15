@@ -4,7 +4,12 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.util.Log;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * author: gavin
@@ -15,6 +20,17 @@ public class BluetoothConnector extends BluetoothGattCallback {
 
     private static final String TAG = "BluetoothConnector";
 
+    private Subject<Integer> connectStatSubject;
+
+    public BluetoothConnector() {
+
+        connectStatSubject = PublishSubject.create();
+    }
+
+    public Observable<Integer> observeConnectState() {
+        return connectStatSubject;
+    }
+
     /**
      * 回调表明 Gatt 连接状态
      *
@@ -24,7 +40,22 @@ public class BluetoothConnector extends BluetoothGattCallback {
      */
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-        Log.d(TAG, "onConnectionStateChange() called with: gatt = [" + gatt + "], status = [" + status + "], newState = [" + newState + "]");
+        /**
+         * 连接状态：
+         *    * The profile is in disconnected state   *public static final int STATE_DISCONNECTED  = 0;
+         *    * The profile is in connecting state     *public static final int STATE_CONNECTING    = 1;
+         *    * The profile is in connected state      *public static final int STATE_CONNECTED    = 2;
+         *    * The profile is in disconnecting state  *public static final int STATE_DISCONNECTING = 3;
+         *
+         */
+        Log.e(TAG, "连接状态:" + newState);
+        if (BluetoothGatt.STATE_CONNECTED == newState) {
+            Log.e(TAG, "连接成功:");
+            gatt.discoverServices(); //必须有，可以让onServicesDiscovered显示所有Services
+        } else if (BluetoothGatt.STATE_DISCONNECTED == newState) {
+            Log.e(TAG, "断开连接:");
+        }
+        connectStatSubject.onNext(newState);
     }
 
     /**
@@ -35,7 +66,15 @@ public class BluetoothConnector extends BluetoothGattCallback {
      */
     @Override
     public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-        Log.d(TAG, "onServicesDiscovered() called with: gatt = [" + gatt + "], status = [" + status + "]");
+        for (BluetoothGattService service : gatt.getServices()) {
+            Log.d(TAG, "onServicesDiscovered: Service = " + service.getUuid().toString());
+            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                Log.d(TAG, "onServicesDiscovered: characteristic = " + characteristic.getUuid().toString());
+                for (BluetoothGattDescriptor descriptor : characteristic.getDescriptors()) {
+                    Log.d(TAG, "onServicesDiscovered: descriptor = " + descriptor.getUuid().toString());
+                }
+            }
+        }
     }
 
     /**
